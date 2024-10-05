@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden; /* Prevent scrollbars caused by background image */
+        }
+
+        .background {
+            position: fixed; /* Fixed to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("{{ url_for('static', filename='delete.jpg') }}"); /* Use url_for to reference the background image */
+            background-size: cover; /* Cover the entire screen */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            filter: blur(8px); /* Apply blur effect */
+            z-index: 0; /* Behind other elements */
+        }
+
+        .container {
+            position: relative; /* To ensure content is above the background */
+            z-index: 1; /* Ensure container is on top */
+            width: 80%;
+            margin: 40px auto; /* Increased margin for spacing */
+            background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white background for readability */
+            padding: 30px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid #e0e0e0; /* Light border for separation */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333; /* Darker color for better contrast */
+            margin-bottom: 20px; /* Spacing below the title */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px; /* Add spacing above the table */
+        }
+
+        th, td {
+            padding: 15px; /* More padding for a spacious feel */
+            border: 1px solid #ccc;
+            text-align: left;
+            transition: background-color 0.3s; /* Smooth transition on hover */
+        }
+
+        th {
+            background-color: #007bff; /* Blue header background */
+            color: white; /* White text on header */
+        }
+
+        td {
+            background-color: #f9f9f9; /* Light gray for table rows */
+        }
+
+        tr:hover td {
+            background-color: #e9ecef; /* Light background on row hover */
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions a {
+            padding: 10px 15px;
+            background-color: #28a745; /* Green for action buttons */
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+        }
+
+        .actions a:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: scale(1.05); /* Slightly enlarge the button */
+        }
+
+        .not-found {
+            text-align: center;
+            font-size: 18px;
+            color: #dc3545; /* Red for "not found" message */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div> <!-- Background image -->
+    <div class="container">
+        <h1>Search Result</h1>
+        {% if tasks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.deadline.strftime('%Y-%m-%d') }}</td>
+                    <td class="actions">
+                        <a href="/edit/{{ task._id }}">Edit</a>
+                        <a href="/delete/{{ task._id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="not-found">No tasks found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

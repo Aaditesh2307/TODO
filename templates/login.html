@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=600'); /* Background image */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+            font-family: 'Arial', sans-serif; /* Change font for better aesthetics */
+        }
+
+        /* Create a pseudo-element for the blur effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: inherit; /* Use the same background image */
+            filter: blur(8px); /* Apply blur effect */
+            z-index: 0; /* Send this to the back */
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent background for the container */
+            padding: 40px; /* Increased padding for a spacious feel */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+            position: relative; /* Required for positioning */
+            z-index: 1; /* Bring container above the blurred background */
+            max-width: 400px; /* Set a maximum width for the container */
+            margin: auto; /* Center the container */
+            top: 50%; /* Position the container */
+            transform: translateY(-50%); /* Center vertically */
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            font-weight: bold; /* Bold heading */
+            color: #333; /* Darker color for text */
+        }
+
+        .form-group label {
+            font-weight: 600; /* Make labels bolder */
+            color: #555; /* Change label color */
+        }
+
+        .btn-primary {
+            border-radius: 20px; /* Rounded corners for button */
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .alert {
+            margin-top: 15px; /* Space above alerts */
+        }
+
+        @media (max-width: 576px) {
+            .login-container {
+                padding: 30px; /* Adjust padding for smaller screens */
+                width: 90%; /* Responsive width */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2 class="text-center">Login</h2>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+    </div>
+</body>
+
+</html>

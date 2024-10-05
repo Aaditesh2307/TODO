@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="background"></div> <!-- Background image -->
+
+    <title>To-Do List</title>
+    <style>
+        /* Base styles */
+        body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative; /* To allow absolute positioning of background */
+    /* overflow: hidden; */ /* Removed this line to allow scrolling */
+}
+
+.background {
+    position: fixed; /* Fixed to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("{{ url_for('static', filename='todo.jpg') }}");
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    filter: blur(2px); 
+    z-index: 0; 
+}
+
+
+        .container {
+            position: relative; 
+            z-index: 1; 
+            width: 80%;
+            margin: 40px auto;
+            background-color: rgba(255, 255, 255, 0.9); 
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form styles */
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form input[type="date"] {
+            width: 20%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        td {
+            color: #555;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Button styles */
+        .actions a {
+            padding: 8px 12px;
+            text-decoration: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .actions a:hover {
+            background-color: #218838;
+        }
+
+        .actions a.delete {
+            background-color: #dc3545;
+        }
+
+        .actions a.delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Search form */
+        .search-form {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            width: 30%;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .search-form button {
+            padding: 10px 15px;
+            background-color: #ffc107;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #e0a800;
+        }
+
+        input:hover {
+                border-color: #28a745; 
+                box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
+            }
+        
+            button:hover {
+                background-color: #218838; 
+                transform: scale(1.05); /* Slightly enlarge the button */
+            }
+            button {
+                grid-column: span 2;
+                padding: 15px;
+                border: none;
+                background-color: #28a745;
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 100%;
+                transition: background-color 0.4s ease, transform 0.4s ease; /* Increased duration */
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+
+                <!-- Search Task Form -->
+                <div style="display: flex; justify-content: flex-end; margin: 20px 0;">
+                    <form action="/search" method="POST" style="display: flex; align-items: center;">
+                        <input type="text" name="task_name" placeholder="Search Task by Name" required 
+                               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; width: 250px; margin-right: 5px;">
+                        <button type="submit" style="padding: 10px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.4s ease;">Search</button>
+                    </form>
+                </div>
+                
+        
+
+        <!-- Add Task Form -->
+        <form action="/add" method="POST" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 800px; margin: 20px auto; padding: 30px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <input type="text" name="task_name" placeholder="Task Name" required style="padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 90%;">
+            <input type="text" name="task_description" placeholder="Task Description" required style="padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 90%;">
+            <input type="number" name="task_priority" placeholder="Priority" required style="padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 90%;">
+            <input type="date" name="task_deadline" required style="padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 90%;">
+            <button type="submit" style="grid-column: span 2; padding: 15px; border: none; background-color: #28a745; color: white; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%;">Add Task</button>
+        </form>
+        
+
+        <!-- Delete All Button -->
+        <div style="display: flex; justify-content: flex-end; margin: 20px 0;">
+            <form action="/delete_all" method="GET">
+                <button class="delete-all-button" type="submit">Delete All Tasks</button>
+            </form>
+        </div>
+        
+        <style>
+            .delete-all-button {
+                padding: 10px 20px;
+                border: none;
+                background-color: #dc3545; 
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                font-size: 16px;
+            }
+        
+            .delete-all-button:hover {
+                background-color: #c82333; 
+            }
+        </style>
+        
+
+
+        <!-- Task Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th> 
+                    <th>Priority</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.deadline.strftime('%Y-%m-%d') }}</td>
+                    <td class="actions">
+                        <a href="/edit/{{ task._id }}">Edit</a>
+                        <a href="/delete/{{ task._id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        
+        <form action="{{ url_for('logout') }}" method="POST" style="display: flex; justify-content: center; margin-top: 20px;">
+            <button type="submit" class="btn btn-danger" style="width: 150px;">Logout</button>
+        </form>
+        
+        
+    </div>
+    
+</body>
+
+</html>
