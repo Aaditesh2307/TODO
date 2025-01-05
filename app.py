@@ -65,12 +65,10 @@ def binary_search(tasks, task_name):
 
 @app.route('/index')
 def index():
-    if 'username' in session:  # Check if user is logged in
-        tasks = list(tasks_collection.find())
-        merge_sort(tasks)  # Sort tasks by priority using merge sort
-        print("Tasks:", tasks)  # Print tasks to check if they're retrieved
-        return render_template('index.html', tasks=tasks)
-    return redirect(url_for('login'))  # Redirect to login if not logged in
+    tasks = list(tasks_collection.find())
+    merge_sort(tasks)  # Sort tasks by priority using merge sort
+    print("Tasks:", tasks)  # Print tasks to check if they're retrieved
+    return render_template('index.html', tasks=tasks)
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
